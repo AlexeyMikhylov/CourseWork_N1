@@ -30,7 +30,7 @@ void form_t(int n, float *t)
 // формирование массива Uvx //код А, определение функции Uvx
 void form_Uvx(float *Uvx, float *t, int n)
 {
-	float t1 = 15, t2 = 60, a = 50, b = 0.07, c = 0.1;
+	float t1 = 15, t2 = 30, a = 50, b = 0.07, c = 0.1;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -38,15 +38,12 @@ void form_Uvx(float *Uvx, float *t, int n)
 		{
 			Uvx[i] = 0;
 		}
-		else if (t1 < t[i] <= t2)
+		else if (t[i] > t1 && t[i] <= t2)
 		{
-			//Uvx[i] = a * (1 - exp((double)b * (-1) * ((double)t[i] - (double)t1)));
 			Uvx[i] = a * (1 - pow(M_E, (double)(-b * (t[i] - t1))));
 		}
 		else if (t[i] > t2)
 		{
-			//Uvx[i] = a * (1 - exp((double)b * (-1) * ((double)t2 - (double)t1))
-			//	* exp((double)c * (-1) * ((double)t[i] - (double)t2)));
 			Uvx[i] = a * (1 - pow(M_E, (double)(-b * (t2 - t1)))) * pow(M_E, (double)(-c * (t[i] - t2)));
 		}
 	}
