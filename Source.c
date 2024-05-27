@@ -124,18 +124,29 @@ void pogreshnost(int n, float *t, float *Uvx, float *Uvix)
 
 void zastavka()
 {
-	//русский язык
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	setlocale(LC_ALL, "RU");
-
 	FILE* f = fopen("zast.txt", "r");
-	char ch;
+	if (f == NULL)
+	{
+		printf("Ошибка открытия файла\n");
+		return 1;
+	}
+
+	int symbol;
+	while ((symbol = fgetc(f)) != EOF)
+	{
+		if ((symbol >= 192 && symbol <= 255) || (symbol >= 1040 && symbol <= 1103))
+		{
+			wprintf(L"%c", symbol);
+		}
+	}
+
+	/*char ch;
 	while (!feof(f))
 	{
 		fscanf_s(f, "%c", &ch);
 		wprintf(L"%c", ch);
-	}
+	}*/
+
 	fclose(f);
 
 	printf("\n\n");
@@ -163,59 +174,60 @@ void zapis(int n, float *t, float *Uvx, float *Uvix)
 
 void menu(int n, float *t, float *Uvx, float *Uvix)
 {
-	//clearBuffer();
-
-	wprintf(L"1 - контрольный рассчет для n точек\n2 - расчет параметра с заданной точностью\n3 - запись данных в файл\n");
-	int option;
-	scanf("%d", &option);
-
-	switch (option)
+	while (1)
 	{
-	case 1:
-		wprintf(L"Введите количество точек для контрольного рассчета:");
-		scanf("%d", &n);
-		
-		form_t(n, t);
-		form_Uvx(Uvx, t, n);
-		form_Uvix(Uvix, Uvx, n);
-		form_table(n, t, Uvx, Uvix);
-		break;
-	case 2:
-		wprintf(L"Введите количество точек для контрольного рассчета:");
-		scanf("%d", &n);
+		wprintf(L"1 - контрольный рассчет для n точек\n2 - расчет параметра с заданной точностью\n3 - запись данных в файл\n");
+		int option;
+		scanf("%d", &option);
 
-		form_t(n, t);
-		form_Uvx(Uvx, t, n);
-		form_Uvix(Uvix, Uvx, n);
+		switch (option)
+		{
+		case 1:
+			wprintf(L"Введите количество точек для контрольного рассчета:");
+			scanf("%d", &n);
 
-		pogreshnost(n, t, Uvx, Uvix);
-		break;
-	case 3:
-		wprintf(L"Введите количество точек для контрольного рассчета:");
-		scanf("%d", &n);
+			form_t(n, t);
+			form_Uvx(Uvx, t, n);
+			form_Uvix(Uvix, Uvx, n);
+			form_table(n, t, Uvx, Uvix);
+			break;
+		case 2:
+			wprintf(L"Введите количество точек для контрольного рассчета:");
+			scanf("%d", &n);
 
-		form_t(n, t);
-		form_Uvx(Uvx, t, n);
-		form_Uvix(Uvix, Uvx, n);
-		zapis(n, t, Uvx, Uvix);
-		break;
-	default:
-		break;
-	}
+			form_t(n, t);
+			form_Uvx(Uvx, t, n);
+			form_Uvix(Uvix, Uvx, n);
 
-	clearBuffer();
-	wprintf(L"\nПродолжить?\n'y' - да\n'q' - нет\n");
-	char option2;
-	scanf("%c", &option2);
+			pogreshnost(n, t, Uvx, Uvix);
+			break;
+		case 3:
+			wprintf(L"Введите количество точек для контрольного рассчета:");
+			scanf("%d", &n);
 
-	switch (option2)
-	{
-	case 'y':
-		menu(n, t, Uvx, Uvix);
-	case 'q':
-		return 0;
-	default:
-		break;
+			form_t(n, t);
+			form_Uvx(Uvx, t, n);
+			form_Uvix(Uvix, Uvx, n);
+			zapis(n, t, Uvx, Uvix);
+			break;
+		default:
+			break;
+		}
+
+		clearBuffer();
+		wprintf(L"\nПродолжить?\n'y' - да\n'q' - нет\n");
+		char option2;
+		scanf("%c", &option2);
+
+		switch (option2)
+		{
+		case 'y':
+			menu(n, t, Uvx, Uvix);
+		case 'q':
+			return 0;
+		default:
+			break;
+		}
 	}
 }
 
