@@ -6,11 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
-#include <locale.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+
+#include <windows.h>
+#include <locale.h>
+#include <wchar.h>
 #define N 1000
 
 void clearBuffer();
@@ -124,28 +126,18 @@ void pogreshnost(int n, float *t, float *Uvx, float *Uvix)
 
 void zastavka()
 {
-	FILE* f = fopen("zast.txt", "r");
+	FILE* f = fopen("zast.txt", "r, ccs=UTF-8");
 	if (f == NULL)
 	{
 		printf("Ошибка открытия файла\n");
 		return 1;
 	}
 
-	int symbol;
-	while ((symbol = fgetc(f)) != EOF)
+	wchar_t ch;
+	while ((ch = fgetwc(f)) != WEOF)
 	{
-		if ((symbol >= 192 && symbol <= 255) || (symbol >= 1040 && symbol <= 1103))
-		{
-			wprintf(L"%c", symbol);
-		}
+		putwchar(ch);
 	}
-
-	/*char ch;
-	while (!feof(f))
-	{
-		fscanf_s(f, "%c", &ch);
-		wprintf(L"%c", ch);
-	}*/
 
 	fclose(f);
 
@@ -248,6 +240,9 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "RU");
+
+	//system("chcp 1251");
+	//setlocale(LC_ALL, "UTF8");
 
 	float t[N], Uvx[N], Uvix[N];
 	int n = 0;
